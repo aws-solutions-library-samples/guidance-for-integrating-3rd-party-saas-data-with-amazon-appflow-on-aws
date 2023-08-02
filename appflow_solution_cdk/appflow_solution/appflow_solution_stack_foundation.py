@@ -12,8 +12,10 @@ from aws_cdk import (
     aws_events_targets as targets,
     aws_stepfunctions
 )
+
+
 class AppflowSolutionStackFoundation(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+    def __init__ (self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         # parameters for Data Lake
         rawBucketName = CfnParameter(self, "RawBucketName", type="String",
@@ -59,7 +61,7 @@ class AppflowSolutionStackFoundation(Stack):
                                            f'{raw_bucket.bucket_arn}/*',
                                            raw_bucket.bucket_arn], conditions=None)])
         appflow_glue_policy = iam.Policy(self, "appflow_glue_policy",
-                                        #  policy_name="appflow_glue_solutionslibrary_policy",
+                                         #  policy_name="appflow_glue_solutionslibrary_policy",
                                          statements=[iam.PolicyStatement(effect=iam.Effect.ALLOW, actions=[
                                              "glue:BatchCreatePartition",
                                              "glue:CreatePartitionIndex",
@@ -94,7 +96,7 @@ class AppflowSolutionStackFoundation(Stack):
                                              f'arn:aws:glue:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:table/{glue_db.database_input.name}/*',
                                              f'arn:aws:glue:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:database/{glue_db.database_input.name}',
                                              f'arn:aws:glue:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:catalog'],
-                                             conditions=None)])
+                                                                         conditions=None)])
         appflow_role = iam.Role(
             self,
             "appflow_solutionslibrary_role",
@@ -104,31 +106,40 @@ class AppflowSolutionStackFoundation(Stack):
         appflow_role.attach_inline_policy(appflow_s3_policy)
         appflow_role.attach_inline_policy(appflow_glue_policy)
         athena_wg = athena.CfnWorkGroup(self, "appflow_workgroup", name=athena_wg_name.value_as_string,
+                                        description='Workgroup for Athena queries',
                                         work_group_configuration=athena.CfnWorkGroup.WorkGroupConfigurationProperty(
                                             result_configuration=athena.CfnWorkGroup.ResultConfigurationProperty(
-                                                output_location=f's3://{results_bucket.bucket_name}/results/')))
+                                                output_location=f's3://{results_bucket.bucket_name}/results/',
+                                                encryption_configuration=athena.CfnWorkGroup.EncryptionConfigurationProperty(
+                                                    encryption_option='SSE_S3',
+                                                ),
+                                            )
+                                        )
+                                        )
 
         # create glue iampolicy to read from s3
         glue_policy = iam.Policy(self, "glue_policy",
-                                #  policy_name="glue_solutionslibrary_policy",
+                                 #  policy_name="glue_solutionslibrary_policy",
                                  statements=[iam.PolicyStatement(effect=iam.Effect.ALLOW, actions=[
-                                     "s3:Get*",
-                                     "s3:List*"
+                                     "s3:GetObject",
+                                     "s3:ListObject",
+                                     "s3:GetObjectVersion"
                                  ], resources=[
                                      f'{raw_bucket.bucket_arn}/*',
                                      raw_bucket.bucket_arn],
-                                     conditions=None)]
+                                                                 conditions=None)]
                                  )
-
         glue_policy.add_statements(iam.PolicyStatement(effect=iam.Effect.ALLOW,
                                                        actions=[
-                                                           "s3:Get*",
-                                                           "s3:List*",
-                                                           "s3:*Object*"
+                                                           "s3:GetObject",
+                                                           "s3:ListObject",
+                                                           "s3:GetObjectVersion",
+                                                           "s3:PutObject"
                                                        ],
                                                        resources=[
                                                            f'{curated_bucket.bucket_arn}/*'],
                                                        conditions=None))
+
         glue_role = iam.Role(
             self, "glue_service_role",
             # role_name='glue_solutionslibrary_role',
@@ -138,6 +149,7 @@ class AppflowSolutionStackFoundation(Stack):
         )
         glue_role.add_managed_policy(policy=iam.ManagedPolicy.from_managed_policy_arn(
             self, id='glueServiceRole', managed_policy_arn='arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'))
+
         glue_role.attach_inline_policy(glue_policy)
         # outputs
         CfnOutput(self, "appflow_role_output", value=appflow_role.role_name,
