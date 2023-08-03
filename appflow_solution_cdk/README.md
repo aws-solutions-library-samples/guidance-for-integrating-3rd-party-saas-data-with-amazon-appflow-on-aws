@@ -24,7 +24,7 @@ Here is the sample command to deploy this stack. Please replace the placeholder 
 - `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName` names can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
 - `GlueDatabaseName` names can consist of lowercase letters, numbers, and the underscore character. Refer to [Database, table, and column names](https://docs.aws.amazon.com/athena/latest/ug/glue-best-practices.html#schema-names) for more information.
 - `AthenaWGName` must be a unique name for your workgroup. Use 1 - 128 characters. (A-Z,a-z,0-9,_,-,.). This name cannot be changed. Refer to [Managing workgroups](https://docs.aws.amazon.com/athena/latest/ug/workgroups-create-update-delete.html#creating-workgroups) for more information.
-```bash
+```Shell
 cdk deploy appflow-solution-foundation \
 --parameters RawBucketName= [ReplaceWithRawBucketName] \
 --parameters CuratedBucketName= [ReplaceWithCuratedBucketName]\
