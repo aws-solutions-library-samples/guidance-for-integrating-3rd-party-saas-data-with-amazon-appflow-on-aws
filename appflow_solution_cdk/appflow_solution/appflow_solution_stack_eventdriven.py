@@ -11,8 +11,8 @@ from aws_cdk import (
 import os
 
 
-class AppflowSolutionStackOptional(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+class AppflowSolutionStackEventDriven(Stack):
+    def __init__ (self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         # create a lambda function with a python runtime
         cfn_parameter_glue_job_name = CfnParameter(self, "glue_job_name",
@@ -23,7 +23,7 @@ class AppflowSolutionStackOptional(Stack):
                                                description="flow name")
         invokeGlue = lambda_.Function(self, "appflow_lambda_function",
                                       # function_name="InvokeGlue",
-                                      runtime=lambda_.Runtime.PYTHON_3_11,
+                                      runtime=lambda_.Runtime.PYTHON_3_6,
                                       handler="invokeGlue.lambda_handler",
                                       code=lambda_.Code.from_asset(os.path.abspath(
                                           os.path.join(os.curdir, 'lambda_function'))),
@@ -34,8 +34,10 @@ class AppflowSolutionStackOptional(Stack):
                                        event_pattern=events.EventPattern(source=["aws.appflow"],
                                                                          detail_type=[
                                                                              "AppFlow End Flow Run Report"],
-                                                                         detail={"flow-name": [cfn_parameter_flow_name.value_as_string],
-                                                                                 "num-of-records-processed": [{"anything-but": ["0"]}],
+                                                                         detail={"flow-name": [
+                                                                             cfn_parameter_flow_name.value_as_string],
+                                                                                 "num-of-records-processed": [
+                                                                                     {"anything-but": ["0"]}],
                                                                                  "status": ["Execution Successful"]
                                                                                  }
                                                                          )
@@ -47,20 +49,4 @@ class AppflowSolutionStackOptional(Stack):
                                                           resources=[
                                                               f"arn:aws:glue:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:job/{cfn_parameter_glue_job_name.value_as_string}"],
                                                           conditions=None))
-        # invokeGlue.add_to_role_policy(iam.PolicyStatement(effect=iam.Effect.ALLOW,
-        #                                                   actions=[
-        #                                                       "logs:CreateLogGroup"
-        #                                                   ],
-        #                                                   resources=[
-        #                                                       f"arn:aws:logs:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:log-group:*"],
-        #                                                   conditions=None))
-        # invokeGlue.add_to_role_policy(iam.PolicyStatement(effect=iam.Effect.ALLOW,
-        #                                                   actions=[
-        #                                                       "logs:CreateLogStream",
-        #                                                       "logs:PutLogEvents"
-        #                                                   ],
-        #                                                   resources=[
-        #                                                       f"arn:aws:logs:{aws_cdk.Aws.REGION}:{aws_cdk.Aws.ACCOUNT_ID}:log-group:/aws/lambda/{invokeGlue.function_name}:*"],
-        #                                                   conditions=None))
-
         eventbridge_rule.add_target(targets.LambdaFunction(invokeGlue))

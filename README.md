@@ -24,9 +24,7 @@ For being able to follow this solution, you will need:
 In this guidance, we are going to import Salesforce opportunities into S3 as they are created, and create a pipeline to transform the dataset and make it avaiable to import into Quicksight. 
 
 ### **Step 1** Deploying CloudFormation Template
-Upload this CF template [appflow-solution.json](appflow_solution_library_cf.json), into the [CloudFormation Console](https://console.aws.amazon.com/cloudformation)
-or deploy it by clicking this link:
-[![Launch_Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home/stacks/new?stackName=appflow_guidance&templateURL=https://aws-batch-architecture-for-alphafold-public-artifacts.s3.amazonaws.com/main/batch-protein-folding-cfn-packaged.yaml)
+Upload this CF template [appflow-solution.json](appflow_solution_library_cf.json), into the [CloudFormation Console](https://console.aws.amazon.com/cloudformation), or use the [AppFlow Solution CDK](appflow_solution_cdk)
 
 The CloudFormation template will create the following resources that are needed for creating an AppFlow Flow:
 - Amazon S3 Bucket:
