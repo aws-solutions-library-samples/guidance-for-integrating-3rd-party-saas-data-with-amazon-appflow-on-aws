@@ -2,9 +2,10 @@
 
 If you are new to deploying CDK, follow this guide to set up environment [CDK Setup](ConfigureCDKENV.md)
 There are 2 CDK deployments in this app. The first is called `appflow-solution-foundation`,
-and this is the foundation of what is needed to deploy this solution. The second stack is the `appflow-solution-eventdriven`
+and this is the foundation of what is needed to deploy this solution.  
+The second stack is the `appflow-solution-eventdriven`. This stack is optional if you choose to trigger the AWS Glue job to start after there are new records transferred into Amazon S3.
 
-
+##  Deploy `appflow-solution-foundation` stack
 The CDK stack will create the following resources that are needed for creating an AppFlow Flow:
 - Amazon S3 Bucket:
   - `RawBucket` bucket where raw data from AppFlow will land.
@@ -33,6 +34,27 @@ cdk deploy appflow-solution-foundation \
 --parameters AthenaWGName=[ReplaceWithAthenaWGName]
 ```
 
+Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/cloudformation/home). This stack will be named `appflow-solution-foundation`. Click on outputs, and this will provide you the names that were generated for the AppFlow Role. It also includes the names of the Amazon S3 buckets created.
 
+![outputs](cf_outputs.png)
 
+##  Deploy `appflow-solution-eventdriven` stack *Optional*
+Pre-requisite:
+- Create an AppFlow Flow to transfer data from your connected SaaS, into your Amazon S3 Raw Bucket.
+- Create an AWS Glue Job that would need to run after each Flow run
+The CDK stack will create the following resources for event driven architecture:
+- AWS Lambda
+  -  `appflow_lambda_function` will create a Python Runtime Environment. Here is the [Python Code](lambda_function/invokeGlue.py)
+  -  The name of the Glue Job is passed through environment variables, and `boto3` will execute the [start_job_run](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/glue/client/start_job_run.html) API.
+  - A IAM Role will be created granting `appflow_lambda_function` permissions to `glue:StartJobRun` only to the Glue Job that is specified.
+- Amazon EventBridge Rule
+  - `appflow_eventbridge_rule` will trigger `appflow_lambda_function` to run whenever the AppFlow End Flow Run Report shows that the number of records processed is not 0.
 
+Here is the sample command to deploy this stack. Please replace the placeholder values with the names you want to provide:
+- `gluejobname` is the name of the job you created. You can find this in the AWS Console by going to [AWS Glue](https://console.aws.amazon.com/glue/home), then clicking ETL jobs.
+- `flowname` is the name of the AppFlow Flow that was created to pull data from your SaaS into AWS. You can find this in the AWS Console by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking on Flows.
+```Shell
+cdk deploy appflow-solution-eventdriven \
+--parameters gluejobname=[ReplaceWithNameofGlueJob] \
+--parameters flowname=[ReplaceWithNameofFlow]
+```

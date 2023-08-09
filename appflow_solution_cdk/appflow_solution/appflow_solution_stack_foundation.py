@@ -163,6 +163,7 @@ class AppflowSolutionStackFoundation(Stack):
                              description="Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to "
                                          "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket."
                              )
+
         glue_role.add_managed_policy(
             policy=iam.ManagedPolicy.from_managed_policy_arn(self, id='glueServiceRole',
                                                              managed_policy_arn='arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole'
@@ -170,17 +171,17 @@ class AppflowSolutionStackFoundation(Stack):
         )
         glue_role.attach_inline_policy(glue_policy)
         # outputs
-        CfnOutput(self, "appflow_role_output",
+        CfnOutput(self, "appflow_role_name",
                   value=appflow_role.role_name,
                   description="name of role to be used when configuring AppFlow Flow.")
-        CfnOutput(self, "appflow_raw_bucket_name_output",
+        CfnOutput(self, "appflow_raw_bucket_name",
                   value=raw_bucket.bucket_name,
                   description="name of raw bucket used to ")
-        CfnOutput(self, "appflow_curated_bucket_name_output",
+        CfnOutput(self, "appflow_curated_bucket_name",
                   value=curated_bucket.bucket_name)
-        CfnOutput(self, "appflow_results_bucket_name_output",
+        CfnOutput(self, "appflow_results_bucket_name",
                   value=results_bucket.bucket_name)
-        CfnOutput(self, "appflow_athena_wg_name_output",
+        CfnOutput(self, "appflow_athena_wg_name",
                   value=athena_wg.name)
-        CfnOutput(self, "appflow_glue_database_name_output",
+        CfnOutput(self, "appflow_glue_database_name",
                   value=glue_db.database_input.name)

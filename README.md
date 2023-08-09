@@ -53,14 +53,16 @@ Next step is to create a connection profile to connect Salesforce to AppFlow. Fo
 [Manage Connections](https://console.aws.amazon.com/appflow/home#/connections)
 
 ### **Step 3** Set up AppFlow Flow
-Once an AppFlow Connection Profile is created, create a [flow](https://console.aws.amazon.com/appflow/home#/create/1)
-
+Once an AppFlow Connection Profile is created, create a Flow by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking Flows and `Create Flow`.
+Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon.com/appflow/latest/userguide/create-flow-console.html), on configuring your Flow. Be sure to use the `RawBucket` that was created in Step 1 as your destination.
 ### **Step 4** Enrich data using AWS Glue
+
 
 ### **Step 5** Query data with Athena 
 
-### ***Step 6 Optional*** Connect Athena to Quicksight
-This may incure a recuring monthly charge since Quicksight is a subscription and is charged per user.
+### **Step 6** ***Optional*** Connect Athena to Quicksight
+This may incur a recurring monthly charge since Quicksight is a subscription and is charged per user. Only proceed if you accept the charges, or already have a QuickSight active account.
+- Follow this guide, [Signing up for an Amazon QuickSight subscription](https://docs.aws.amazon.com/quicksight/latest/user/signing-up.html), if you want to sign up for QuickSight.
 - Subscribe to Quicksight
 - Create Dataset
 - Generate visualization
