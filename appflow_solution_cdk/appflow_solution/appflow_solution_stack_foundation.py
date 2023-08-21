@@ -136,8 +136,8 @@ class AppflowSolutionStackFoundation(Stack):
                                         )
                                         )
 
-        # create glue iampolicy to read from s3
-        glue_policy = iam.Policy(self, "glue_policy",
+        # create glue iam policy to read from s3
+        glue_policy = iam.Policy(self, "gluejob_solution_policy",
                                  statements=[iam.PolicyStatement(effect=iam.Effect.ALLOW, actions=[
                                      "s3:GetObject",
                                      "s3:ListObject",
@@ -158,10 +158,10 @@ class AppflowSolutionStackFoundation(Stack):
                                                        )
                                    )
 
-        glue_role = iam.Role(self, "glue_service_role",
+        glue_role = iam.Role(self, "glue_role",
                              assumed_by=iam.ServicePrincipal("glue.amazonaws.com"),
                              description="Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to "
-                                         "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket."
+                                         "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket.",
                              )
 
         glue_role.add_managed_policy(
@@ -174,14 +174,6 @@ class AppflowSolutionStackFoundation(Stack):
         CfnOutput(self, "appflow_role_name",
                   value=appflow_role.role_name,
                   description="name of role to be used when configuring AppFlow Flow.")
-        CfnOutput(self, "appflow_raw_bucket_name",
-                  value=raw_bucket.bucket_name,
-                  description="name of raw bucket used to ")
-        CfnOutput(self, "appflow_curated_bucket_name",
-                  value=curated_bucket.bucket_name)
-        CfnOutput(self, "appflow_results_bucket_name",
-                  value=results_bucket.bucket_name)
-        CfnOutput(self, "appflow_athena_wg_name",
-                  value=athena_wg.name)
-        CfnOutput(self, "appflow_glue_database_name",
-                  value=glue_db.database_input.name)
+        CfnOutput(self, "glue_role_name",
+                  value=glue_role.role_name,
+                  description="name of role for AWS Glue to use for read Only access")

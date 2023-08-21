@@ -39,6 +39,9 @@ Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/clo
 ![outputs](cf_outputs.png)
 
 ##  Deploy `appflow-solution-eventdriven` stack *Optional*
+This is an optional stack to deploy an EventBridge Rule that will trigger an
+AWS Lambda function to run the AWS Glue Job whenever the AppFlow finishes running and pulls data from the source.
+
 Pre-requisite:
 - Create an AppFlow Flow to transfer data from your connected SaaS, into your Amazon S3 Raw Bucket.
 - Create an AWS Glue Job that would need to run after each Flow run

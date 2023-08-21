@@ -1,5 +1,3 @@
-import os
-
 import aws_cdk
 from aws_cdk import (
     Stack,
@@ -11,6 +9,8 @@ from aws_cdk import (
     CfnOutput
 )
 from constructs import Construct
+import os
+
 
 class AppflowSolutionStackEventDriven(Stack):
     def __init__ (self, scope: Construct, construct_id: str, **kwargs) -> None:
