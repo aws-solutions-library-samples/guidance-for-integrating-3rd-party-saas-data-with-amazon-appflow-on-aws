@@ -2,11 +2,11 @@
   "Parameters": {
     "gluejobname": {
       "Type": "String",
-      "Description": "Glue Job Name"
+      "Description": "Glue job name"
     },
     "flowname": {
       "Type": "String",
-      "Description": "flow name"
+      "Description": "Flow name"
     }
   },
   "Resources": {
