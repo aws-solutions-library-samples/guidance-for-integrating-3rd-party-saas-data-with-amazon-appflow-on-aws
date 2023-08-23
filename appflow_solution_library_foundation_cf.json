@@ -2,61 +2,16 @@
   "Parameters": {
     "RawBucketName": {
       "Type": "String",
-      "Default": {
-        "Fn::Join": [
-          "",
-          [
-            "appflow-solution-raw-",
-            {
-              "Ref": "AWS::Region"
-            },
-            "-",
-            {
-              "Ref": "AWS::AccountId"
-            }
-          ]
-        ]
-      },
       "AllowedPattern": "(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$",
       "Description": "Name of the Raw S3 Bucket where AppFlow will load data into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
     },
     "CuratedBucketName": {
       "Type": "String",
-      "Default": {
-        "Fn::Join": [
-          "",
-          [
-            "appflow-solution-curated-",
-            {
-              "Ref": "AWS::Region"
-            },
-            "-",
-            {
-              "Ref": "AWS::AccountId"
-            }
-          ]
-        ]
-      },
       "AllowedPattern": "(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$",
       "Description": "Name of the Curated S3 Bucket where transformed data will be loaded into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
     },
     "ResultsBucketName": {
       "Type": "String",
-      "Default": {
-        "Fn::Join": [
-          "",
-          [
-            "appflow-solution-results-",
-            {
-              "Ref": "AWS::Region"
-            },
-            "-",
-            {
-              "Ref": "AWS::AccountId"
-            }
-          ]
-        ]
-      },
       "Description": "Name of the Results S3 Bucket where Athena will store query results (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
     },
     "GlueDatabaseName": {
@@ -94,10 +49,7 @@
         }
       },
       "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain",
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/RawBucket/Resource"
-      }
+      "DeletionPolicy": "Retain"
     },
     "RawBucketPolicy61C50A52": {
       "Type": "AWS::S3::BucketPolicy",
@@ -629,16 +581,6 @@
       "Metadata": {
         "aws:cdk:path": "appflow-solution-foundation/glue_role/Resource"
       }
-    },
-    "CDKMetadata": {
-      "Type": "AWS::CDK::Metadata",
-      "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OPQ+CMBCGfwt7OUEmVzFxlODgaI5ySgVa0l5jCOG/y1eC0/N+XXJHOEUQBfh1oSzrsFEFDHdGWYv0pTO02BKTFVP/HFwCw9nLmnguN7UiM42S/R6vfhTvxhNM6QUZC3QkFLYw7OtN5aah2c4cBXJFGuezh7H11RrfjSInZ7yVy+zmufPLE/9panSpWBk9iqznyuhDAnEMSfBxSoXWa1YtQb7yBx/6TFj4AAAA"
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/CDKMetadata/Default"
-      },
-      "Condition": "CDKMetadataAvailable"
     }
   },
   "Outputs": {

@@ -188,18 +188,7 @@
       "Metadata": {
         "aws:cdk:path": "appflow-solution-eventdriven/appflow_eventbridge_rule/AllowEventRuleappflowsolutioneventdrivenappflowlambdafunction05C761E8"
       }
-    },
-    "CDKMetadata": {
-      "Type": "AWS::CDK::Metadata",
-      "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OwW7CMBBEv4W7s0Bz6hGQem2UfgBanAWWxHblXbdCVv4dx7QSp5nRm13NG7xvYLPCX2nsMDYTnyB/KdrRHM6+w4iOlKIp/JgndKcBIX8kb5WDXyqvvqPoWKSk2TA6yH2YaAFVuzCxvddedbOR9ogipAK7RUqGfbIj6R6FDP2QLyj36e9J0Xk2PUlI0ZKpN2Xqhf1l4Z9Jv5PW5n+l+EPwA2ud1N31Gvy6he0W2tVNmJuYvLIj6J/6AJu63D4NAQAA"
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-eventdriven/CDKMetadata/Default"
-      },
-      "Condition": "CDKMetadataAvailable"
-    }
-  },
+    }},
   "Outputs": {
     "appfloweventbridgerulename": {
       "Value": {
