@@ -17,25 +17,30 @@ class AppflowSolutionStackFoundation(Stack):
         # parameters for Data Lake
         rawBucketName = CfnParameter(self, "RawBucketName",
                                      type="String",
+                                     default=f'appflow-solution-raw-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
                                      description="Name of the Raw S3 Bucket where AppFlow will load data into"
                                                  " (Bucket names can consist only of lowercase letters, numbers"
                                                  ", dots, and hyphens)",
                                      allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
         curatedBucketName = CfnParameter(self, "CuratedBucketName",
+                                         default=f'appflow-solution-curated-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
                                          type="String",
                                          description="Name of the Curated S3 Bucket where transformed data will be "
                                                      "loaded into (Bucket names can consist only of lowercase "
                                                      "letters, numbers, dots, and hyphens)",
                                          allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
         resultsBucketName = CfnParameter(self, "ResultsBucketName",
+                                         default=f'appflow-solution-results-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
                                          type="String",
                                          description="Name of the Results S3 Bucket where Athena will store query "
                                                      "results (Bucket names can consist only of lowercase letters, "
                                                      "numbers, dots, and hyphens)")
         glueDatabaseName = CfnParameter(self, "GlueDatabaseName",
+                                        default='appflowsolution_db',
                                         type="String",
                                         description="Name of the Glue Database")
         athena_wg_name = CfnParameter(self, "AthenaWGName",
+                                      default='appflowsolution_wg',
                                       type="String",
                                       description="Name of the Athena Workgroup")
         # s3 buckets

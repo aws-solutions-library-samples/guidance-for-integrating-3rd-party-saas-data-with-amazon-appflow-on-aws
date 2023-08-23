@@ -1,403 +1,215 @@
 {
- "Parameters": {
-  "gluejobname": {
-   "Type": "String",
-   "Description": "Glue Job Name"
-  },
-  "flowname": {
-   "Type": "String",
-   "Description": "flow name"
-  }
- },
- "Resources": {
-  "appflowlambdafunctioninlineServiceRole00396F1F": {
-   "Type": "AWS::IAM::Role",
-   "Properties": {
-    "AssumeRolePolicyDocument": {
-     "Statement": [
-      {
-       "Action": "sts:AssumeRole",
-       "Effect": "Allow",
-       "Principal": {
-        "Service": "lambda.amazonaws.com"
-       }
-      }
-     ],
-     "Version": "2012-10-17"
+  "Parameters": {
+    "gluejobname": {
+      "Type": "String",
+      "Description": "Glue Job Name"
     },
-    "ManagedPolicyArns": [
-     {
-      "Fn::Join": [
-       "",
-       [
-        "arn:",
-        {
-         "Ref": "AWS::Partition"
-        },
-        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-       ]
-      ]
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function_inline/ServiceRole/Resource"
-   }
+    "flowname": {
+      "Type": "String",
+      "Description": "flow name"
+    }
   },
-  "appflowlambdafunctioninlineServiceRoleDefaultPolicyBAC5428B": {
-   "Type": "AWS::IAM::Policy",
-   "Properties": {
-    "PolicyDocument": {
-     "Statement": [
-      {
-       "Action": "glue:StartJobRun",
-       "Effect": "Allow",
-       "Resource": {
-        "Fn::Join": [
-         "",
-         [
-          "arn:aws:glue:",
+  "Resources": {
+    "appflowlambdafunctionServiceRole3AA1F935": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
           {
-           "Ref": "AWS::Region"
-          },
-          ":",
-          {
-           "Ref": "AWS::AccountId"
-          },
-          ":job/",
-          {
-           "Ref": "gluejobname"
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
           }
-         ]
         ]
-       }
+      },
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function/ServiceRole/Resource"
       }
-     ],
-     "Version": "2012-10-17"
     },
-    "PolicyName": "appflowlambdafunctioninlineServiceRoleDefaultPolicyBAC5428B",
-    "Roles": [
-     {
-      "Ref": "appflowlambdafunctioninlineServiceRole00396F1F"
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function_inline/ServiceRole/DefaultPolicy/Resource"
-   }
-  },
-  "appflowlambdafunctioninlineD155A00A": {
-   "Type": "AWS::Lambda::Function",
-   "Properties": {
-    "Code": {
-     "ZipFile": "\nimport json\nimport boto3\nimport os\nglue_client = boto3.client('glue')\ndef lambda_handler (event, context):\n    print(event)\n    response = glue_client.start_job_run(\n        JobName = os.environ['glue_job_name']\n    )\n    return {\n        'statusCode': 200,\n        'body': response\n    }\n\n                                      "
-    },
-    "Environment": {
-     "Variables": {
-      "glue_job_name": {
-       "Ref": "gluejobname"
-      }
-     }
-    },
-    "Handler": "invokeGlue.lambda_handler",
-    "Role": {
-     "Fn::GetAtt": [
-      "appflowlambdafunctioninlineServiceRole00396F1F",
-      "Arn"
-     ]
-    },
-    "Runtime": "python3.11"
-   },
-   "DependsOn": [
-    "appflowlambdafunctioninlineServiceRoleDefaultPolicyBAC5428B",
-    "appflowlambdafunctioninlineServiceRole00396F1F"
-   ],
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function_inline/Resource"
-   }
-  },
-  "appfloweventbridgeruleB70772B2": {
-   "Type": "AWS::Events::Rule",
-   "Properties": {
-    "EventPattern": {
-     "detail": {
-      "flow-name": [
-       {
-        "Ref": "flowname"
-       }
-      ],
-      "num-of-records-processed": [
-       {
-        "anything-but": [
-         "0"
+    "appflowlambdafunctionServiceRoleDefaultPolicyC823A40E": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "glue:StartJobRun",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:glue:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":job/",
+                    {
+                      "Ref": "gluejobname"
+                    }
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "appflowlambdafunctionServiceRoleDefaultPolicyC823A40E",
+        "Roles": [
+          {
+            "Ref": "appflowlambdafunctionServiceRole3AA1F935"
+          }
         ]
-       }
+      },
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "appflowlambdafunctionA7698E76": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "c3ff088cdf6d521b5ff1a69871da3f5e8781fe9689c12a617c98a27861d89878.zip"
+        },
+        "Environment": {
+          "Variables": {
+            "glue_job_name": {
+              "Ref": "gluejobname"
+            }
+          }
+        },
+        "Handler": "invokeGlue.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "appflowlambdafunctionServiceRole3AA1F935",
+            "Arn"
+          ]
+        },
+        "Runtime": "python3.11"
+      },
+      "DependsOn": [
+        "appflowlambdafunctionServiceRoleDefaultPolicyC823A40E",
+        "appflowlambdafunctionServiceRole3AA1F935"
       ],
-      "status": [
-       "Execution Successful"
-      ]
-     },
-     "detail-type": [
-      "AppFlow End Flow Run Report"
-     ],
-     "source": [
-      "aws.appflow"
-     ]
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/appflow_lambda_function/Resource",
+        "aws:asset:path": "asset.c3ff088cdf6d521b5ff1a69871da3f5e8781fe9689c12a617c98a27861d89878",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
     },
-    "State": "ENABLED",
-    "Targets": [
-     {
-      "Arn": {
-       "Fn::GetAtt": [
-        "appflowlambdafunctioninlineD155A00A",
-        "Arn"
-       ]
+    "appfloweventbridgeruleB70772B2": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "EventPattern": {
+          "detail": {
+            "flow-name": [
+              {
+                "Ref": "flowname"
+              }
+            ],
+            "num-of-records-processed": [
+              {
+                "anything-but": [
+                  "0"
+                ]
+              }
+            ],
+            "status": [
+              "Execution Successful"
+            ]
+          },
+          "detail-type": [
+            "AppFlow End Flow Run Report"
+          ],
+          "source": [
+            "aws.appflow"
+          ]
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "appflowlambdafunctionA7698E76",
+                "Arn"
+              ]
+            },
+            "Id": "Target0"
+          }
+        ]
       },
-      "Id": "Target0"
-     }
-    ]
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/appflow_eventbridge_rule/Resource"
-   }
-  },
-  "appfloweventbridgeruleAllowEventRuleappflowsolutioneventdrivenappflowlambdafunctioninline4B55D26952AC4BFC": {
-   "Type": "AWS::Lambda::Permission",
-   "Properties": {
-    "Action": "lambda:InvokeFunction",
-    "FunctionName": {
-     "Fn::GetAtt": [
-      "appflowlambdafunctioninlineD155A00A",
-      "Arn"
-     ]
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/appflow_eventbridge_rule/Resource"
+      }
     },
-    "Principal": "events.amazonaws.com",
-    "SourceArn": {
-     "Fn::GetAtt": [
-      "appfloweventbridgeruleB70772B2",
-      "Arn"
-     ]
+    "appfloweventbridgeruleAllowEventRuleappflowsolutioneventdrivenappflowlambdafunction05C761E8ED254AA3": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "appflowlambdafunctionA7698E76",
+            "Arn"
+          ]
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "appfloweventbridgeruleB70772B2",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/appflow_eventbridge_rule/AllowEventRuleappflowsolutioneventdrivenappflowlambdafunction05C761E8"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OwW7CMBBEv4W7s0Bz6hGQem2UfgBanAWWxHblXbdCVv4dx7QSp5nRm13NG7xvYLPCX2nsMDYTnyB/KdrRHM6+w4iOlKIp/JgndKcBIX8kb5WDXyqvvqPoWKSk2TA6yH2YaAFVuzCxvddedbOR9ogipAK7RUqGfbIj6R6FDP2QLyj36e9J0Xk2PUlI0ZKpN2Xqhf1l4Z9Jv5PW5n+l+EPwA2ud1N31Gvy6he0W2tVNmJuYvLIj6J/6AJu63D4NAQAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "appflow-solution-eventdriven/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
     }
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/appflow_eventbridge_rule/AllowEventRuleappflowsolutioneventdrivenappflowlambdafunctioninline4B55D269"
-   }
   },
-  "CDKMetadata": {
-   "Type": "AWS::CDK::Metadata",
-   "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02Nyw6CMBBFv4V9GUFWrkncSvADTCk1jvRh2qmGNP13S3XB6t655yRzhFMDTcU/vhbzUiucIF6Ji4X1dzNwx7Uk6Vjmt6i4nmYO8RyMILRmU/Z9kE6j9/lKDLmGOFolN1BysArFWrzSEpNvachnLfy1nCmxUXobnCjTJdArUIG7tbdmRip/hpUe1hw6aFvoqqdHrF0whFrC+MsvRkzBoOIAAAA="
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-eventdriven/CDKMetadata/Default"
-   },
-   "Condition": "CDKMetadataAvailable"
-  }
- },
- "Outputs": {
-  "appfloweventbridgerulename": {
-   "Value": {
-    "Ref": "appfloweventbridgeruleB70772B2"
-   }
-  },
-  "appflowlambdafunctionname": {
-   "Value": {
-    "Ref": "appflowlambdafunctioninlineD155A00A"
-   }
-  }
- },
- "Conditions": {
-  "CDKMetadataAvailable": {
-   "Fn::Or": [
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "af-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-northeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ap-southeast-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "ca-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "cn-northwest-1"
-       ]
+  "Outputs": {
+    "appfloweventbridgerulename": {
+      "Value": {
+        "Ref": "appfloweventbridgeruleB70772B2"
       }
-     ]
     },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-central-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-north-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-2"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "eu-west-3"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "me-south-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "sa-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-east-2"
-       ]
+    "appflowlambdafunctionname": {
+      "Value": {
+        "Ref": "appflowlambdafunctionA7698E76"
       }
-     ]
-    },
-    {
-     "Fn::Or": [
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-1"
-       ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-2"
-       ]
-      }
-     ]
     }
-   ]
   }
- }
 }
