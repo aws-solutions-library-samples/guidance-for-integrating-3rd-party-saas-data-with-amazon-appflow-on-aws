@@ -9,6 +9,9 @@ from aws_cdk import (
     aws_athena as athena
 )
 from constructs import Construct
+from random import randint
+import uuid
+
 
 
 class AppflowSolutionStackFoundation(Stack):
@@ -16,21 +19,22 @@ class AppflowSolutionStackFoundation(Stack):
         super().__init__(scope, construct_id, **kwargs)
         # parameters for Data Lake
         rawBucketName = CfnParameter(self, "RawBucketName",
-                                     type="String",
-                                     default=f'appflow-solution-raw-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
+                                     default="appflow-solution-raw-{}".format(uuid.uuid4().hex),
                                      description="Name of the Raw S3 Bucket where AppFlow will load data into"
                                                  " (Bucket names can consist only of lowercase letters, numbers"
                                                  ", dots, and hyphens)",
                                      allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
         curatedBucketName = CfnParameter(self, "CuratedBucketName",
-                                         default=f'appflow-solution-curated-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
+                                         # default="appflow-solution-curated-{}-{}".format(aws_cdk.Aws.REGION,aws_cdk.Aws.ACCOUNT_ID),
+                                         default="appflow-solution-curated-{}".format(uuid.uuid4().hex),
                                          type="String",
                                          description="Name of the Curated S3 Bucket where transformed data will be "
                                                      "loaded into (Bucket names can consist only of lowercase "
                                                      "letters, numbers, dots, and hyphens)",
                                          allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
         resultsBucketName = CfnParameter(self, "ResultsBucketName",
-                                         default=f'appflow-solution-results-{aws_cdk.Aws.REGION}-{aws_cdk.Aws.ACCOUNT_ID}',
+                                         # default="appflow-solution-results-{}-{}".format(aws_cdk.Aws.REGION,aws_cdk.Aws.ACCOUNT_ID),
+                                         default="appflow-solution-results-{}".format(uuid.uuid4().hex),
                                          type="String",
                                          description="Name of the Results S3 Bucket where Athena will store query "
                                                      "results (Bucket names can consist only of lowercase letters, "
@@ -44,6 +48,7 @@ class AppflowSolutionStackFoundation(Stack):
                                       type="String",
                                       description="Name of the Athena Workgroup")
         # s3 buckets
+
         raw_bucket = s3.Bucket(self, "RawBucket",
                                bucket_name=rawBucketName.value_as_string,
                                enforce_ssl=True,
@@ -182,3 +187,12 @@ class AppflowSolutionStackFoundation(Stack):
         CfnOutput(self, "glue_role_name",
                   value=glue_role.role_name,
                   description="name of role for AWS Glue to use for read Only access")
+        CfnOutput(self, "raw_bucket_name",
+                  value=raw_bucket.bucket_name,
+                  description="name of raw bucket created")
+        CfnOutput(self, "curated_bucket_name",
+                  value=curated_bucket.bucket_name,
+                  description="name of curated bucket created")
+        CfnOutput(self, "results_bucket_name",
+                  value=results_bucket.bucket_name,
+                  description="name of results bucket created")
