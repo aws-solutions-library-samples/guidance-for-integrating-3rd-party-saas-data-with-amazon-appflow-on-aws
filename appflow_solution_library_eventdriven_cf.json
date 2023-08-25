@@ -2,11 +2,11 @@
   "Parameters": {
     "gluejobname": {
       "Type": "String",
-      "Description": "Glue job name"
+      "Description": "Provide Glue job name that you want to trigger to run when AppFlow Completes running"
     },
     "flowname": {
       "Type": "String",
-      "Description": "Flow name"
+      "Description": "Name of AppFlow Flow that you want to monitor. When this Flow finishes running, it will trigger the Glue job to run"
     }
   },
   "Resources": {
