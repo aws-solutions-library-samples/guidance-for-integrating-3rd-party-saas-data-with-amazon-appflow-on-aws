@@ -25,564 +25,579 @@
       "Description": "Name of the Athena Workgroup"
     }
   },
-  "Resources": {
-    "RawBucket0C3EE094": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256"
-              }
-            }
-          ]
-        },
-        "BucketName": {
-          "Ref": "RawBucketName"
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true
-        }
-      },
-      "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain"
-    },
-    "RawBucketPolicy61C50A52": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "RawBucket0C3EE094"
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false"
-                }
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*"
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "RawBucket0C3EE094",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "RawBucket0C3EE094",
-                          "Arn"
-                        ]
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ],
-          "Version": "2012-10-17"
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/RawBucket/Policy/Resource"
+ "Resources": {
+  "RawBucket0C3EE094": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
       }
+     ]
     },
-    "CuratedBucket6A59C97E": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256"
-              }
-            }
-          ]
-        },
-        "BucketName": {
-          "Ref": "CuratedBucketName"
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true
-        }
-      },
-      "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain",
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/CuratedBucket/Resource"
-      }
+    "BucketName": {
+     "Ref": "RawBucketName"
     },
-    "CuratedBucketPolicyFFF5920D": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "CuratedBucket6A59C97E"
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false"
-                }
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*"
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "CuratedBucket6A59C97E",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "CuratedBucket6A59C97E",
-                          "Arn"
-                        ]
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ],
-          "Version": "2012-10-17"
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/CuratedBucket/Policy/Resource"
-      }
-    },
-    "ResultsBucketA95A2103": {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256"
-              }
-            }
-          ]
-        },
-        "BucketName": {
-          "Ref": "ResultsBucketName"
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true
-        }
-      },
-      "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain",
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/ResultsBucket/Resource"
-      }
-    },
-    "ResultsBucketPolicy5EF3AFA7": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {
-          "Ref": "ResultsBucketA95A2103"
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false"
-                }
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*"
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "ResultsBucketA95A2103",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "ResultsBucketA95A2103",
-                          "Arn"
-                        ]
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ],
-          "Version": "2012-10-17"
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/ResultsBucket/Policy/Resource"
-      }
-    },
-    "GlueAppFlowDB": {
-      "Type": "AWS::Glue::Database",
-      "Properties": {
-        "CatalogId": {
-          "Ref": "AWS::AccountId"
-        },
-        "DatabaseInput": {
-          "Name": {
-            "Ref": "GlueDatabaseName"
-          }
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/GlueAppFlowDB"
-      }
-    },
-    "appflows3policy5FBC87E5": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:AbortMultipartUpload",
-                "s3:GetBucketAcl",
-                "s3:ListBucketMultipartUploads",
-                "s3:ListMultipartUploadParts",
-                "s3:PutObject",
-                "s3:PutObjectAcl"
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "RawBucket0C3EE094",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "RawBucket0C3EE094",
-                          "Arn"
-                        ]
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "PolicyName": "appflow_s3_solutionslibrary_policy",
-        "Roles": [
-          {
-            "Ref": "appflowsolutionslibraryrole7E9B0EDC"
-          }
-        ]
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/appflow_s3_policy/Resource"
-      }
-    },
-    "appflowgluepolicy1A8BA2FF": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "glue:BatchCreatePartition",
-                "glue:BatchDeletePartition",
-                "glue:BatchDeleteTable",
-                "glue:BatchDeleteTableVersion",
-                "glue:BatchGetPartition",
-                "glue:BatchUpdatePartition",
-                "glue:CreateDatabase",
-                "glue:CreatePartition",
-                "glue:CreatePartitionIndex",
-                "glue:CreateTable",
-                "glue:DeleteDatabase",
-                "glue:DeletePartition",
-                "glue:DeletePartitionIndex",
-                "glue:DeleteTable",
-                "glue:DeleteTableVersion",
-                "glue:GetDatabase",
-                "glue:GetDatabases",
-                "glue:GetPartition",
-                "glue:GetPartitionIndexes",
-                "glue:GetPartitions",
-                "glue:GetTable",
-                "glue:GetTableVersion",
-                "glue:GetTableVersions",
-                "glue:GetTables",
-                "glue:TagResource",
-                "glue:UntagResource",
-                "glue:UpdateDatabase",
-                "glue:UpdatePartition",
-                "glue:UpdateTable"
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:glue:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":catalog"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:glue:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":database/",
-                      {
-                        "Ref": "GlueDatabaseName"
-                      }
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:glue:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Ref": "GlueDatabaseName"
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "PolicyName": "appflowgluepolicy1A8BA2FF",
-        "Roles": [
-          {
-            "Ref": "appflowsolutionslibraryrole7E9B0EDC"
-          }
-        ]
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/appflow_glue_policy/Resource"
-      }
-    },
-    "appflowsolutionslibraryrole7E9B0EDC": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "appflow.amazonaws.com"
-              }
-            }
-          ],
-          "Version": "2012-10-17"
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/appflow_solutionslibrary_role/Resource"
-      }
-    },
-    "appflowworkgroup": {
-      "Type": "AWS::Athena::WorkGroup",
-      "Properties": {
-        "Description": "Workgroup for Athena queries",
-        "Name": {
-          "Ref": "AthenaWGName"
-        },
-        "WorkGroupConfiguration": {
-          "ResultConfiguration": {
-            "EncryptionConfiguration": {
-              "EncryptionOption": "SSE_S3"
-            },
-            "OutputLocation": {
-              "Fn::Join": [
-                "",
-                [
-                  "s3://",
-                  {
-                    "Ref": "ResultsBucketA95A2103"
-                  },
-                  "/results/"
-                ]
-              ]
-            }
-          }
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/appflow_workgroup"
-      }
-    },
-    "gluejobsolutionpolicyBE84ED0A": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:ListObject"
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "RawBucket0C3EE094",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "RawBucket0C3EE094",
-                          "Arn"
-                        ]
-                      },
-                      "/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:ListObject",
-                "s3:PutObject"
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Fn::GetAtt": [
-                        "CuratedBucket6A59C97E",
-                        "Arn"
-                      ]
-                    },
-                    "/*"
-                  ]
-                ]
-              }
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "PolicyName": "gluejobsolutionpolicyBE84ED0A",
-        "Roles": [
-          {
-            "Ref": "glueroleFCCAEB57"
-          }
-        ]
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/gluejob_solution_policy/Resource"
-      }
-    },
-    "glueroleFCCAEB57": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "glue.amazonaws.com"
-              }
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "Description": "Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to provide Read only access to Raw Bucket, and read and write permissions into the curated bucket.",
-        "ManagedPolicyArns": [
-          "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
-        ]
-      },
-      "Metadata": {
-        "aws:cdk:path": "appflow-solution-foundation/glue_role/Resource"
-      }
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
     }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/RawBucket/Resource"
+   }
   },
+  "RawBucketPolicy61C50A52": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "RawBucket0C3EE094"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RawBucket0C3EE094",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RawBucket0C3EE094",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/RawBucket/Policy/Resource"
+   }
+  },
+  "CuratedBucket6A59C97E": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": {
+     "Ref": "CuratedBucketName"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/CuratedBucket/Resource"
+   }
+  },
+  "CuratedBucketPolicyFFF5920D": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "CuratedBucket6A59C97E"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CuratedBucket6A59C97E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CuratedBucket6A59C97E",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/CuratedBucket/Policy/Resource"
+   }
+  },
+  "ResultsBucketA95A2103": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": {
+     "Ref": "ResultsBucketName"
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/ResultsBucket/Resource"
+   }
+  },
+  "ResultsBucketPolicy5EF3AFA7": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "ResultsBucketA95A2103"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ResultsBucketA95A2103",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ResultsBucketA95A2103",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/ResultsBucket/Policy/Resource"
+   }
+  },
+  "GlueAppFlowDB": {
+   "Type": "AWS::Glue::Database",
+   "Properties": {
+    "CatalogId": {
+     "Ref": "AWS::AccountId"
+    },
+    "DatabaseInput": {
+     "Name": {
+      "Ref": "GlueDatabaseName"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/GlueAppFlowDB"
+   }
+  },
+  "appflows3policy5FBC87E5": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:AbortMultipartUpload",
+        "s3:GetBucketAcl",
+        "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RawBucket0C3EE094",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RawBucket0C3EE094",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "appflow_s3_solutionslibrary_policy",
+    "Roles": [
+     {
+      "Ref": "appflowsolutionslibraryrole7E9B0EDC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/appflow_s3_policy/Resource"
+   }
+  },
+  "appflowgluepolicy1A8BA2FF": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "glue:BatchCreatePartition",
+        "glue:BatchDeletePartition",
+        "glue:BatchDeleteTable",
+        "glue:BatchDeleteTableVersion",
+        "glue:BatchGetPartition",
+        "glue:BatchUpdatePartition",
+        "glue:CreateDatabase",
+        "glue:CreatePartition",
+        "glue:CreatePartitionIndex",
+        "glue:CreateTable",
+        "glue:DeleteDatabase",
+        "glue:DeletePartition",
+        "glue:DeletePartitionIndex",
+        "glue:DeleteTable",
+        "glue:DeleteTableVersion",
+        "glue:GetDatabase",
+        "glue:GetDatabases",
+        "glue:GetPartition",
+        "glue:GetPartitionIndexes",
+        "glue:GetPartitions",
+        "glue:GetTable",
+        "glue:GetTableVersion",
+        "glue:GetTableVersions",
+        "glue:GetTables",
+        "glue:TagResource",
+        "glue:UntagResource",
+        "glue:UpdateDatabase",
+        "glue:UpdatePartition",
+        "glue:UpdateTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:glue:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":catalog"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:glue:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":database/",
+           {
+            "Ref": "GlueDatabaseName"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:glue:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":table/",
+           {
+            "Ref": "GlueDatabaseName"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "appflowgluepolicy1A8BA2FF",
+    "Roles": [
+     {
+      "Ref": "appflowsolutionslibraryrole7E9B0EDC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/appflow_glue_policy/Resource"
+   }
+  },
+  "appflowsolutionslibraryrole7E9B0EDC": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appflow.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "RoleName": "appflow_solutionslibrary_role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/appflow_solutionslibrary_role/Resource"
+   }
+  },
+  "appflowworkgroup": {
+   "Type": "AWS::Athena::WorkGroup",
+   "Properties": {
+    "Description": "Workgroup for Athena queries",
+    "Name": {
+     "Ref": "AthenaWGName"
+    },
+    "WorkGroupConfiguration": {
+     "ResultConfiguration": {
+      "EncryptionConfiguration": {
+       "EncryptionOption": "SSE_S3"
+      },
+      "OutputLocation": {
+       "Fn::Join": [
+        "",
+        [
+         "s3://",
+         {
+          "Ref": "ResultsBucketA95A2103"
+         },
+         "/results/"
+        ]
+       ]
+      }
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/appflow_workgroup"
+   }
+  },
+  "gluejobsolutionpolicyBE84ED0A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:ListObject"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "RawBucket0C3EE094",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "RawBucket0C3EE094",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:ListObject",
+        "s3:PutObject"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "CuratedBucket6A59C97E",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "gluejobsolutionpolicyBE84ED0A",
+    "Roles": [
+     {
+      "Ref": "glueroleFCCAEB57"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/gluejob_solution_policy/Resource"
+   }
+  },
+  "glueroleFCCAEB57": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "glue.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to provide Read only access to Raw Bucket, and read and write permissions into the curated bucket.",
+    "ManagedPolicyArns": [
+     "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
+    ],
+    "RoleName": "glue_solutionslibrary_role"
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/glue_role/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OPQ+CMBCGfwt7OUEmVzFxlODgaI5ySgVa0l5jCOG/y1eC0/N+XXJHOEUQBfh1oSzrsFEFDHdGWYv0pTO02BKTFVP/HFwCw9nLmnguN7UiM42S/R6vfhTvxhNM6QUZC3QkFLYw7OtN5aah2c4cBXJFGuezh7H11RrfjSInZ7yVy+zmufPLE/9panSpWBk9iqznyuhDAnEMSfBxSoXWa1YtQb7yBx/6TFj4AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "appflow-solution-foundation/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
  "Outputs": {
   "appflowrolename": {
    "Description": "Name of role to be used when configuring AppFlow Flow.",
