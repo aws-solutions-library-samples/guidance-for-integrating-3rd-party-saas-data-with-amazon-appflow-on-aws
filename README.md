@@ -28,7 +28,7 @@ There are 2 ways that you can deploy the foundational resources.
 - The first method is using uploading this CF template [appflow_solution_library_foundation_cf.json](appflow_solution_library_foundation_cf.json),  
 into the [CloudFormation Console](https://console.aws.amazon.com/cloudformation).  
 - The second method is to use  the [AWS Cloud Development Kit](https://aws.amazon.com/cdk/)(CDK).
-The code to deploy this solution with CDK can be found in the [AppFlow Solution CDK](appflow_solution_cdk) directory.
+The code and instructions to deploy this solution with CDK can be found in the [AppFlow Solution CDK](appflow_solution_cdk) directory.
 
 This guide will focus on using CloudFormation to deploy all resources.  
 The CloudFormation template will create the following resources that are needed for creating an AppFlow Flow:

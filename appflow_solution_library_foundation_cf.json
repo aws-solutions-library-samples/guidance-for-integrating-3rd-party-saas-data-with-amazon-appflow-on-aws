@@ -586,18 +586,48 @@
       }
     }
   },
-  "Outputs": {
-    "appflowrolename": {
-      "Description": "name of role to be used when configuring AppFlow Flow.",
-      "Value": {
-        "Ref": "appflowsolutionslibraryrole7E9B0EDC"
-      }
-    },
-    "gluerolename": {
-      "Description": "name of role for AWS Glue to use for read Only access",
-      "Value": {
-        "Ref": "glueroleFCCAEB57"
-      }
-    }
+ "Outputs": {
+  "appflowrolename": {
+   "Description": "Name of role to be used when configuring AppFlow Flow.",
+   "Value": {
+    "Ref": "appflowsolutionslibraryrole7E9B0EDC"
+   }
+  },
+  "gluerolename": {
+   "Description": "Name of role for AWS Glue to use for read Only access",
+   "Value": {
+    "Ref": "glueroleFCCAEB57"
+   }
+  },
+  "rawbucketname": {
+   "Description": "Name of raw bucket created",
+   "Value": {
+    "Ref": "RawBucket0C3EE094"
+   }
+  },
+  "curatedbucketname": {
+   "Description": "Name of curated bucket created",
+   "Value": {
+    "Ref": "CuratedBucket6A59C97E"
+   }
+  },
+  "resultsbucketname": {
+   "Description": "Name of results bucket created",
+   "Value": {
+    "Ref": "ResultsBucketA95A2103"
+   }
+  },
+  "gluedbname": {
+   "Description": "Name of Glue database",
+   "Value": {
+    "Ref": "GlueDatabaseName"
+   }
+  },
+  "athenawgname": {
+   "Description": "Name of Athena workgroup",
+   "Value": {
+    "Ref": "AthenaWGName"
+   }
   }
+ }
 }

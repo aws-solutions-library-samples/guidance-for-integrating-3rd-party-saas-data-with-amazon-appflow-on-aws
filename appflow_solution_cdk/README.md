@@ -21,8 +21,12 @@ The CDK stack will create the following resources that are needed for creating a
 - Athena Workgroup:
   -  `appflow_workgroup` workgroup is configured to write results into `ResultsBucket`
 
-Here is the sample command to deploy this stack. Please replace the placeholder values with the names you want to provide:
-- `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName` names can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
+Here is a sample command to deploy this stack with all the default parameters:
+```Shell
+cdk deploy appflow-solution-foundation
+```
+If you want to customize the parameters, here is the sample command to deploy this stack. Please replace the placeholder values with the names you want to provide:
+- `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName` names must be globally unique and can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
 - `GlueDatabaseName` names can consist of lowercase letters, numbers, and the underscore character. Refer to [Database, table, and column names](https://docs.aws.amazon.com/athena/latest/ug/glue-best-practices.html#schema-names) for more information.
 - `AthenaWGName` must be a unique name for your workgroup. Use 1 - 128 characters. (A-Z,a-z,0-9,_,-,.). This name cannot be changed. Refer to [Managing workgroups](https://docs.aws.amazon.com/athena/latest/ug/workgroups-create-update-delete.html#creating-workgroups) for more information.
 ```Shell
@@ -34,9 +38,9 @@ cdk deploy appflow-solution-foundation \
 --parameters AthenaWGName=[ReplaceWithAthenaWGName]
 ```
 
-Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/cloudformation/home). This stack will be named `appflow-solution-foundation`. Click on outputs, and this will provide you the names that were generated for the AppFlow Role. It also includes the names of the Amazon S3 buckets created.
+Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/cloudformation/home). This stack will be named `appflow-solution-foundation`. Click on outputs, and this will provide you the names that were generated for the AppFlow Role.
 
-![outputs](cf_outputs.png)
+![outputs](cf_outputs_foundation.png)
 
 ##  Deploy `appflow-solution-eventdriven` stack *Optional*
 This is an optional stack to deploy an EventBridge Rule that will trigger an
@@ -53,7 +57,7 @@ The CDK stack will create the following resources for event driven architecture:
 - Amazon EventBridge Rule
   - `appflow_eventbridge_rule` will trigger `appflow_lambda_function` to run whenever the AppFlow End Flow Run Report shows that the number of records processed is not 0.
 
-Here is the sample command to deploy this stack. Please replace the placeholder values with the names you want to provide:
+Here is the sample command to deploy this stack. There are no default parameters, so please replace the placeholder values with the names of your Flow name and Glue Job name:
 - `gluejobname` is the name of the job you created. You can find this in the AWS Console by going to [AWS Glue](https://console.aws.amazon.com/glue/home), then clicking ETL jobs.
 - `flowname` is the name of the AppFlow Flow that was created to pull data from your SaaS into AWS. You can find this in the AWS Console by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking on Flows.
 ```Shell
@@ -61,3 +65,5 @@ cdk deploy appflow-solution-eventdriven \
 --parameters gluejobname=[ReplaceWithNameofGlueJob] \
 --parameters flowname=[ReplaceWithNameofFlow]
 ```
+Now, anytime you run your AppFlow Flow, it will automatically trigger the Lambda Function to run the Glue job. Here are the outputs of
+![outputs](cf_outputs_eventdriven.png)

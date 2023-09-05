@@ -181,16 +181,22 @@ class AppflowSolutionStackFoundation(Stack):
         # outputs
         CfnOutput(self, "appflow_role_name",
                   value=appflow_role.role_name,
-                  description="name of role to be used when configuring AppFlow Flow.")
+                  description="Name of role to be used when configuring AppFlow Flow.")
         CfnOutput(self, "glue_role_name",
                   value=glue_role.role_name,
-                  description="name of role for AWS Glue to use for read Only access")
+                  description="Name of role for AWS Glue to use for read Only access")
         CfnOutput(self, "raw_bucket_name",
                   value=raw_bucket.bucket_name,
-                  description="name of raw bucket created")
+                  description="Name of raw bucket created")
         CfnOutput(self, "curated_bucket_name",
                   value=curated_bucket.bucket_name,
-                  description="name of curated bucket created")
+                  description="Name of curated bucket created")
         CfnOutput(self, "results_bucket_name",
                   value=results_bucket.bucket_name,
-                  description="name of results bucket created")
+                  description="Name of results bucket created")
+        CfnOutput(self, "glue_db_name",
+                  value=glue_db.database_input.name,
+                  description="Name of Glue database")
+        CfnOutput(self, "athena_wg_name",
+                  value=athena_wg.name,
+                  description="Name of Athena workgroup")
