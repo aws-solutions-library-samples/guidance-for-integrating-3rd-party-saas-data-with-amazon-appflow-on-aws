@@ -128,6 +128,7 @@ class AppflowSolutionStackFoundation(Stack):
                                          )
         appflow_role = iam.Role(self, "appflow_solutionslibrary_role",
                                 assumed_by=iam.ServicePrincipal("appflow.amazonaws.com"),
+                                role_name="appflow_solutionslibrary_role"
                                 )
         appflow_role.attach_inline_policy(appflow_s3_policy)
         appflow_role.attach_inline_policy(appflow_glue_policy)
@@ -168,8 +169,9 @@ class AppflowSolutionStackFoundation(Stack):
 
         glue_role = iam.Role(self, "glue_role",
                              assumed_by=iam.ServicePrincipal("glue.amazonaws.com"),
+                             role_name='glue_solutionslibrary_role',
                              description="Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to "
-                                         "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket.",
+                                         "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket."
                              )
 
         glue_role.add_managed_policy(

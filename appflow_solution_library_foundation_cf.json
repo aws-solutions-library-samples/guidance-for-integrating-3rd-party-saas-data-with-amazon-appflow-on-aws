@@ -2,20 +2,17 @@
   "Parameters": {
     "RawBucketName": {
       "Type": "String",
-      "Default": "appflow-solution-raw-xxxxxxxxx",
       "AllowedPattern": "(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$",
-      "Description": "Replace appflow-solution-raw-xxxxxxxxx with a unique name for Raw S3 Bucket. This S3 Bucket is where AppFlow will load data into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
+      "Description": "This S3 Bucket is where AppFlow will load data into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens). A naming convention can be in this form: appflow-solution-raw-[random_value]"
     },
     "CuratedBucketName": {
       "Type": "String",
-      "Default": "appflow-solution-curated-xxxxxxxxx",
       "AllowedPattern": "(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$",
-      "Description": "Replace appflow-solution-results-xxxxxxxxx with a unique name for Results S3 Bucket. This S3 Bucket is where transformed data will be loaded into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
+      "Description": "This S3 Bucket is where transformed data will be loaded into (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens). A naming convention can be in this form: appflow-solution-curated-[random_value]"
     },
     "ResultsBucketName": {
       "Type": "String",
-      "Default": "appflow-solution-results-xxxxxxxxx",
-      "Description": "Replace appflow-solution-results-xxxxxxxxx with a unique name for Results S3 Bucket. This S3 Bucket is where Athena will store query results (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens)"
+      "Description": "This S3 Bucket is where Athena will store query results (Bucket names can consist only of lowercase letters, numbers, dots, and hyphens). A naming convention can be in this form: appflow-solution-results-[random_value]"
     },
     "GlueDatabaseName": {
       "Type": "String",

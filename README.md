@@ -17,9 +17,7 @@ There is going to be an optional stack deployment that will enable you to run yo
 ## Prerequisites
 For being able to follow this solution, you will need:  
 - An AWS account with sufficient permissions to deploy this solution.
-- Supported SaaS application, such as Salesforce or ServiceNow, from the [AppFlow supported applications](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html). 
-- Meet the requirements specific to your application. Please find and review the requirements for your application [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html).
-
+- Have a SaaS application, such as Salesforce or ServiceNow, that is supported and meets the requirements found [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html) for their respective applications.
 ## Deploying Solution
 In this guidance, we are going to import Salesforce opportunities into S3 as they are created, and create a pipeline to transform the dataset and make it avaiable to import into QuickSight.
 
@@ -47,40 +45,58 @@ The CloudFormation template will create the following resources that are needed 
   -  `appflow_workgroup` workgroup is configured to write results into `ResultsBucket`
 
 Fill in the parameter fields:
-- `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName` names can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
-- `GlueDatabaseName` names can consist of lowercase letters, numbers, and the underscore character. Refer to [Database, table, and column names](https://docs.aws.amazon.com/athena/latest/ug/glue-best-practices.html#schema-names) for more information.
-- `AthenaWGName` must be a unique name for your workgroup. Use 1 - 128 characters. (A-Z,a-z,0-9,_,-,.). This name cannot be changed. Refer to [Managing workgroups](https://docs.aws.amazon.com/athena/latest/ug/workgroups-create-update-delete.html#creating-workgroups) for more information.
+- `GlueDatabaseName` and `AthenaWGName` will have valid default names, but users have the option of changing the values as long as they are unique to the account the template is deployed in.
+- `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName`  must be globally unique names and can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
+  - When making names for the S3 buckets, it is best to include some sort of naming convention that allows you to identify at a glance what data the bucket is storing. Using a distinct value, such as account number or random value, you can use the following starters:
+    - `RawBucketName` can be named `appflow-solution-raw-[random_value]`
+    - `CuratedBucketName` can be named `appflow-solution-curated-[random_value]`
+    - `ResultsBucketName` can be named `appflow-solution-results-[random_value]`
+
+After the CloudFormation Template has been created, click on the Outputs tab. This will provide you the names of resources that will need to be referenced later.
+
+![outputs](appflow_solution_cdk/cf_outputs_foundation.png)
+
 
 ### **Step 2** Set up AppFlow Connector
-Next step is to create a connection profile to connect Salesforce to AppFlow. For Connecting Salesforce to AppFlow, detailed instructions could be found here: [Connecting Amazon AppFlow to your Salesforce account](https://docs.aws.amazon.com/appflow/latest/userguide/salesforce.html). If you are using a service other than Salesforce, you can find your supported application [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html). Follow the instructions for your respective application, and the connection will provide you access 
+Next step is to create a connection profile to connect Salesforce to AppFlow. For Connecting Salesforce to AppFlow, detailed instructions could be found here: [Connecting Amazon AppFlow to your Salesforce account](https://docs.aws.amazon.com/appflow/latest/userguide/salesforce.html). If you are using a service other than Salesforce, you can find your supported application [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html). Follow the instructions for your respective application, and the connection will provide you access
 [Manage Connections](https://console.aws.amazon.com/appflow/home#/connections)
 
 ### **Step 3** Set up AppFlow Flow
 Once an AppFlow Connection Profile is created, create a Flow by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking Flows and `Create Flow`.
-Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon.com/appflow/latest/userguide/create-flow-console.html), on configuring your Flow. Be sure to use the `RawBucket` that was created in Step 1 as your destination,  
-and use the AppFlow Glue Policy
+Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon.com/appflow/latest/userguide/create-flow-console.html), on configuring your Flow.  
+here are
+#### Configure Destination Details:
+- When configuring the Destination Details, use Amazon S3 as the destination.
+- For Bucket Details, use the Raw Data Bucket created in the CloudFormation Template. To get the name, go to the CloudFormation Stack and click *Outputs*, find the `rawbucketname` key and use this bucket for your raw data landing bucket.
+- Click the *AWS Glue Data Catalog settings - optional* dropdown, and check *Catalog your data in the AWS Glue Data Catalog*.
+  - For user role, use the custom role created in the CloudFormation template called `glue_solutionlibrary_role`
+  - For Database use `appflowsolution_db` as the database, and provide a table name of choice.
+
+![appflow_destination_details_gluedatacatalog](appflow_destination_details.png)
+
 ### **Step 4** Enrich data using AWS Glue
-Crete an AWS Glue Job. In the outputs of the CloudFormation Template, there will be a Role Service Role created that will allow your Glue job Read only access into resources in your Raw Data Bucket, and read and write permissions into your Curated_Data bucket.
+Crete an AWS Glue Job. There will be a Role Service Role created that will allow your Glue job Read only access into resources in your Raw Data Bucket, and read and write permissions into your Curated_Data bucket.
 
 ### **Step 5** Create Trigger to run AWS Glue Job ***(Optional)***
 This step is optional. This step will create resources for automating your data pipeline and having it be event driven to trigger based on the results of the AppFlow End Flow Run Report.
-By deploying the [appflow_solution_library_eventdriven_cf.json](appflow_solution_library_eventdriven_cf.json) template, this will deploy an EventBridge Rule that will trigger an AWS Lambda function to run the AWS Glue Job whenever the AppFlow finishes running and pulls data from the source.
+By deploying the [appflow_solution_library_eventdriven_cf.json](appflow_solution_library_eventdriven_cf.json) template, this will deploy an EventBridge Rule that will trigger an AWS Lambda function to run the AWS Glue Job whenever the AppFlow finishes running and pulls data from the source. If you prefer to use CDK, the code and instructions to deploy this solution with CDK can be found in the [AppFlow Solution CDK](appflow_solution_cdk) directory. Please follow the instructions for Deploying `appflow-solution-eventdriven` stack
 
 #### Pre-requisites:
-- Create an AppFlow Flow that you want to monitor
-- Create an AWS Glue Job that runs successfully, and you want to run automatically
+- Create an AppFlow Flow that you want to serve a trigger to run your Glue Job.
+- Create an AWS Glue Job to run automatically after the AppFlow Flow finishes running.
 
 #### Deploy CloudFormation Template
  Once you have created the pre-requisite resources, you will need to get the names of the resources and enter this information into the Parameters of the CloudFormation template.
 - `gluejobname` is the name of the AWS Glue job you want to run automatically. You can find this in the AWS Console by going to [AWS Glue](https://console.aws.amazon.com/glue/home), then clicking ETL jobs.
 - `flowname` is the name of the AppFlow Flow that was created to pull data from your SaaS into AWS. This is the Flow you want to monitor and serve as your trigger to run the AWS Glue Job. You can find this in the AWS Console by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking on Flows.
 
+
 Finish Deploying the CloudFormation Template, and all the resources will be provisioned and run when your flow finishes running.
 
-### **Step 5** Query data with Athena
+### **Step 6** Query data with Athena
 A WorkGroup was created in Amazon Athena that has been pre-configured to store query results in `ResultsBucket`. To query the data that has been imported into your AWS Environment, you can query the Raw Data, or you can Query the data that has been transformed and stored in your `CuratedBucket`
 
-### **Step 6** Connect Athena to QuickSight ***(Optional)***
+### **Step 7** Connect Athena to QuickSight ***(Optional)***
 This may incur a recurring monthly charge since QuickSight is a subscription and is charged per user. Only proceed if you accept the charges, or already have a QuickSight active account.
 - Follow this guide, [Signing up for an Amazon QuickSight subscription](https://docs.aws.amazon.com/quicksight/latest/user/signing-up.html), if you want to sign up for QuickSight.
 - Subscribe to QuickSight
