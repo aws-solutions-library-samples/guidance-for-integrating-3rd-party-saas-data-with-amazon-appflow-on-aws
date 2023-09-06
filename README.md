@@ -58,21 +58,27 @@ After the CloudFormation Template has been created, click on the Outputs tab. Th
 
 
 ### **Step 2** Set up AppFlow Connector
-Next step is to create a connection profile to connect Salesforce to AppFlow. For Connecting Salesforce to AppFlow, detailed instructions could be found here: [Connecting Amazon AppFlow to your Salesforce account](https://docs.aws.amazon.com/appflow/latest/userguide/salesforce.html). If you are using a service other than Salesforce, you can find your supported application [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html). Follow the instructions for your respective application, and the connection will provide you access
-[Manage Connections](https://console.aws.amazon.com/appflow/home#/connections)
+Next step is to create a connection profile to connect Salesforce to AppFlow. For Connecting Salesforce to AppFlow, detailed instructions could be found here: [Connecting Amazon AppFlow to your Salesforce account](https://docs.aws.amazon.com/appflow/latest/userguide/salesforce.html). If you are using a service other than Salesforce, you can find instructions for your supported application [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html). Follow the instructions for your respective application.
 
 ### **Step 3** Set up AppFlow Flow
-Once an AppFlow Connection Profile is created, create a Flow by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking Flows and `Create Flow`.
-Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon.com/appflow/latest/userguide/create-flow-console.html), on configuring your Flow.  
-here are
+Once an AppFlow Connection Profile is created, create a Flow by going to [Amazon AppFlow](https://console.aws.amazon.com/appflow/home), then clicking *Flows* and *Create Flow*.
+Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon.com/appflow/latest/userguide/create-flow-console.html) to configuring your Flow. When you get to *Configure flow*, this is where you will need to configure Source details and Destination details.
+#### Configure Source Details:
+- For Source Details, you will use the Connector that was created in Step 2.- Once there, you can pick the object that you want to pull into AWS.
 #### Configure Destination Details:
 - When configuring the Destination Details, use Amazon S3 as the destination.
-- For Bucket Details, use the Raw Data Bucket created in the CloudFormation Template. To get the name, go to the CloudFormation Stack and click *Outputs*, find the `rawbucketname` key and use this bucket for your raw data landing bucket.
-- Click the *AWS Glue Data Catalog settings - optional* dropdown, and check *Catalog your data in the AWS Glue Data Catalog*.
-  - For user role, use the custom role created in the CloudFormation template called `glue_solutionlibrary_role`
-  - For Database use `appflowsolution_db` as the database, and provide a table name of choice.
+  - For Bucket Details, use the Raw Data Bucket created in the CloudFormation Template. To get the name, go to the CloudFormation Stack and click *Outputs*, find the `rawbucketname` key and use this bucket for your raw data landing bucket.
+  - Click the *AWS Glue Data Catalog settings - optional* dropdown, and check *Catalog your data in the AWS Glue Data Catalog*.
+    - For user role, use the custom role created in the CloudFormation template called `glue_solutionlibrary_role`
+    - For Database use `appflowsolution_db` as the database, and provide a table name of choice.
 
 ![appflow_destination_details_gluedatacatalog](appflow_destination_details.png)
+
+For this Guide, we suggest that you use on demand to have control on when it runs. It can later be changed to run on a schedule.
+
+Configure the rest of the Flow based on your needs, if you only need a subset of column, or need to filter the data.
+
+Once fully configured, review the Flow and click *Run Flow*.
 
 ### **Step 4** Enrich data using AWS Glue
 Crete an AWS Glue Job. There will be a Role Service Role created that will allow your Glue job Read only access into resources in your Raw Data Bucket, and read and write permissions into your Curated_Data bucket.
