@@ -88,7 +88,6 @@ class AppflowSolutionStackFoundation(Stack):
                                        ]
                                        )
         appflow_glue_policy = iam.Policy(self, "appflow_glue_policy",
-                                         #  policy_name="appflow_glue_solutionslibrary_policy",
                                          statements=[iam.PolicyStatement(effect=iam.Effect.ALLOW, actions=[
                                              "glue:BatchCreatePartition",
                                              "glue:CreatePartitionIndex",

@@ -1,4 +1,5 @@
 {
+   "Description": "CloudFormation template to deploy foundational infrastructure for AppFlow Solution (SO9285)",
   "Parameters": {
     "RawBucketName": {
       "Type": "String",
