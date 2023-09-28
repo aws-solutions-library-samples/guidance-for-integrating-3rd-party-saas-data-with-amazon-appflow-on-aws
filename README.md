@@ -3,12 +3,7 @@
 
 Welcome to Guidance for Integrating 3rd Party SaaS Data with Amazon AppFlow!
 ## Overview
-Customers work with a variety of SaaS providers that keep their data in silos. By using AppFlow to retrieve data, customers are able to quickly, and easily pull and catalog the data to a central data lake in S3. Once data is in S3, customers would be able to prepare data for machine learning, cleans the data, or load it into a Redshift DW.
-
-In this guidance, we are going to deploy the necessary resources to sync data from Salesforce, and load it into Amazon S3.
-Athena will serve as the querying engine to load data into Amazon QuickSight.
-
-There is going to be an optional stack deployment that will enable you to run your AWS Glue ETL job based on AppFlow End Flow Run Report results in EventEngine.
+This Guidance demonstrates how to ingest third-party Software as a Service (SaaS) data into Amazon S3 to build a serverless business intelligence pipeline. SaaS applications remove the burden of having to build a solution from the ground up. The challenge with SaaS applications is that the data exists in external data stores, making it difficult to analyze the data that comes from other sources. Importing data into Amazon S3 removes data silos and centralizes the data to transform and enrich the datasets. By deploying this Guidance, you can gain better insights from your SaaS data, remove barriers when integrating the data, and leverage a serverless architecture that provides on-demand resources and a pay-as-you-go pricing model.
 
 ## Solution Architecture for Integrating 3rd Party SaaS Data with Amazon AppFlow
 
@@ -144,14 +139,10 @@ review if you want to Import the dataset using SPICE or direct query, then click
 
 
 ## Cleanup
-Upon completing this guidance, you have the option to retain or delete the resources created in this
+Upon completing this guidance, you have the option to retain or delete the resources created. If you decide to delete the resources, here are the items to delete.
 - Delete the Cloud Formation Templates that were deployed. By default, the S3 buckets that were created will be retained, so you will need to delete these manually.
-- Check QuickSight for any Datasets that you no longer need.
+- Check QuickSight for any Datasets that you no longer need, and determin if you still want to keep the QuickSight subscription.
 - Check AWS Glue for any jobs that you manually created and see if you want to retain or delete them.
-
-in the next sc
-- Create Dataset
-- Generate visualization
 
 ## Security
 
