@@ -40,7 +40,7 @@ cdk deploy appflow-solution-foundation \
 
 Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/cloudformation/home). This stack will be named `appflow-solution-foundation`. Click on outputs, and this will provide you the names that were generated for the AppFlow Role.
 
-![outputs](cf_outputs_foundation.png)
+<img src="imgs/cf_outputs_foundation.png" alt="image" width="800" height="auto">
 
 ##  Deploy `appflow-solution-eventdriven` stack *Optional*
 This is an optional stack to deploy an EventBridge Rule that will trigger an
@@ -66,4 +66,5 @@ cdk deploy appflow-solution-eventdriven \
 --parameters flowname=[ReplaceWithNameofFlow]
 ```
 Now, anytime you run your AppFlow Flow, it will automatically trigger the Lambda Function to run the Glue job. Here are the outputs of
-![outputs](cf_outputs_eventdriven.png)
+
+<img src="imgs/cf_outputs_eventdriven.png" alt="image" width="800" height="auto">

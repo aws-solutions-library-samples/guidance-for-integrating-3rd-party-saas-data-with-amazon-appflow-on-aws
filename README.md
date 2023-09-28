@@ -54,7 +54,7 @@ Fill in the parameter fields:
 
 After the CloudFormation Template has been created, click on the Outputs tab. This will provide you the names of resources that will need to be referenced later.
 
-<img src="appflow_solution_cdk/cf_outputs_foundation.png" alt="image" width="800" height="auto">
+<img src="appflow_solution_cdk/imgs/cf_outputs_foundation.png" alt="image" width="800" height="auto">
 
 
 ### **Step 2** Set up AppFlow Connector
@@ -67,7 +67,7 @@ Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon
 - For Source Details, you will use the Connector that was created in Step 2.
 - Once there, you can pick the object that you want to pull into AWS.
 
-<img src="appflow_source_details.png" alt="image" width="800" height="auto">
+<img src="imgs/appflow_source_details.png" alt="image" width="800" height="auto">
 
 
 #### Configure Destination Details:
@@ -77,7 +77,7 @@ Follow this guide, [Create a flow using the AWS console](https://docs.aws.amazon
     - For user role, use the custom role created in the CloudFormation template called `glue_solutionlibrary_role`
     - For Database, use `appflowsolution_db` as the database and provide a table name of your choice.
 
-<img src="appflow_destination_details.png" alt="image" width="800" height="auto">
+<img src="imgs/appflow_destination_details.png" alt="image" width="800" height="auto">
 
 
 For this Guide, we suggest that you use on demand to have control on when it runs. It can later be changed to run on a schedule.
@@ -92,20 +92,11 @@ AWS Glue is used to enhance the data that you brought in to AWS with AppFlow. Th
 If you want to perform transformations, such as aggregating, joining, change schema, or partitioning data, then AWS Glue will preform the transformations. In this guide, we are going to preform a simple transformation where the contacts brought into AWS are going to be deduplicated and converted into a schema that our downstream systems require.
 
 #### Transform or enhance the data with Glue Studio
-Create a job by going AWS Glue and Create a job using the *Visual with a source and target* template.
+Follow this guide, [Creating ETL jobs with AWS Glue Studio](https://docs.aws.amazon.com/glue/latest/ug/creating-jobs-chapter.html), to create a job on AWS Glue.
 
-<img src="aws_glue_studio.png" alt="image" width="800" height="auto">
+When you get to configuring *job details*, an AWS Glue Role named `glue_solutionslibrary_role` was created that allows glue read only access to the `Raw_Data` bucket, and grants read and write access to the `Curated_Data` bucket. Attach this role to your job to grant it access to all the necessary resources and perform the necessary actions.
 
-Configure Data Source using Glue Data Catalog table. This will read the data from the Raw S3 bucket and use the schema from AppFlow.
-
-<img src="aws_glue_studio_source.png" alt="image" width="800" height="auto">
-
-In this guide, we will do a simple transformation of the data. To Optimize the data for querying, we are going to convert the JSON raw data into a parquet format that is compressed to lower the storage cost.
-
-#### Configuring
-
-Once the data is in the S3 bucket, you have the option of creating an AWS Glue Job to enhance the data.  
-There will be a Service Role called `glue_solutionslibrary_role` created by the CloudFormation template that will grant your Glue job read only access into resources in your Raw Data Bucket, and read and write permissions into your Curated Data bucket.
+<img src="imgs/aws_glue_studio.png" alt="image" width="800" height="auto">
 
 ### **Step 5** Create Trigger to run AWS Glue Job ***(Optional)***
 This step is optional. This step will create resources for automating your data pipeline and having it be event driven to trigger based on the results of the AppFlow End Flow Run Report.
@@ -124,12 +115,41 @@ By deploying the [appflow_solution_library_eventdriven_cf.json](appflow_solution
 Finish Deploying the CloudFormation Template, and all the resources will be provisioned and run when your flow finishes running.
 
 ### **Step 6** Query data with Athena
-A WorkGroup was created in Amazon Athena that has been pre-configured to store query results in the Results bucket. To query the data that has been imported into your AWS Environment, you can query the Raw Data, or you can Query the data that has been transformed and stored in your `CuratedBucket`
+The `appflowsolution_wg` workgroup was created in Amazon Athena that has been pre-configured to store query results in the Results bucket. By going to [Athena Query Editor](https://console.aws.amazon.com/athena/home), you will need to select the `appflowsolution_wg` workgroup. Then under database, select `appflowsolution_db`, then you will see the available tables you can run SQL queries on. This allows you to explore the dataset, and run standard SQL operations to filter, join, and aggregate the datasets inside the `appflowsolution_db` database.
+
+<img src="imgs/athena_query_editor.png" alt="image" width="800" height="auto">
 
 ### **Step 7** Connect Athena to QuickSight ***(Optional)***
 This may incur a recurring monthly charge since QuickSight is a subscription and is charged per user. Only proceed if you accept the charges, or already have a QuickSight active account.
-- Follow this guide, [Signing up for an Amazon QuickSight subscription](https://docs.aws.amazon.com/quicksight/latest/user/signing-up.html), if you want to sign up for QuickSight.
-- Subscribe to QuickSight
+
+Follow this guide, [Signing up for an Amazon QuickSight subscription](https://docs.aws.amazon.com/quicksight/latest/user/signing-up.html), if you want to sign up for QuickSight.
+
+To create a dataset in QuickSight, click `Datasets`, then `New dataset`.
+
+<img src="imgs/qs_dataset.png" alt="image" width="800" height="auto">
+
+Select `Athena` then provide a name for your data source, and in athena workgroup select `appflowsolution_wg`.
+Click `Validate Connection` to verify that the data source is accessible by QuickSight, then click `Create data source`.
+
+<img src="imgs/qs_athena_workgroup.png" alt="image" width="800" height="auto">
+
+Under Database, select `appflowsolution_db` then select the table you want to bring into QuickSight.
+
+<img src="imgs/qs_athena_database.png" alt="image" width="800" height="auto">
+
+review if you want to Import the dataset using SPICE or direct query, then click visualize.
+
+<img src="imgs/qs_athena_review.png" alt="image" width="800" height="auto">
+
+
+
+## Cleanup
+Upon completing this guidance, you have the option to retain or delete the resources created in this
+- Delete the Cloud Formation Templates that were deployed. By default, the S3 buckets that were created will be retained, so you will need to delete these manually.
+- Check QuickSight for any Datasets that you no longer need.
+- Check AWS Glue for any jobs that you manually created and see if you want to retain or delete them.
+
+in the next sc
 - Create Dataset
 - Generate visualization
 
