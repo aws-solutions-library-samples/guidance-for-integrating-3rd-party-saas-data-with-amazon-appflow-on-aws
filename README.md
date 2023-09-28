@@ -14,20 +14,18 @@ For being able to follow this solution, you will need:
 - An AWS account with sufficient permissions to deploy this solution.
 - Have a SaaS application, such as Salesforce or ServiceNow, that is supported and meets the requirements found [here](https://docs.aws.amazon.com/appflow/latest/userguide/app-specific.html) for their respective applications.
 ## Deploying Solution
-In this guidance, we are going to import Salesforce opportunities into S3 as they are created, and create a pipeline to transform the dataset and make it avaiable to import into QuickSight.
+In this guidance, we are going to import Salesforce opportunities into S3 as they are created, and create a pipeline to transform the dataset and make it available to import into QuickSight.
 
 ### **Step 1** Deploying CloudFormation Template or CDK stack
 There are 2 ways that you can deploy the foundational resources.
-- The first method is using uploading this CF template [appflow_solution_library_foundation_cf.json](appflow_solution_library_foundation_cf.json),  
-into the [CloudFormation Console](https://console.aws.amazon.com/cloudformation).
-- The second method is to use  the [AWS Cloud Development Kit](https://aws.amazon.com/cdk/)(CDK).
-The code and instructions to deploy this solution with CDK can be found in the [AppFlow Solution CDK](appflow_solution_cdk) directory.
+- The first method is using uploading this CF template [appflow_solution_library_foundation_cf.json](appflow_solution_library_foundation_cf.json), into the [CloudFormation Console](https://console.aws.amazon.com/cloudformation).
+- The second method is to use  the [AWS Cloud Development Kit](https://aws.amazon.com/cdk/)(CDK). The code and instructions to deploy this solution with CDK can be found in the [AppFlow Solution CDK](appflow_solution_cdk) directory.
 
 This guide will focus on using CloudFormation to deploy all resources.  
 The CloudFormation template will create the following resources that are needed for creating an AppFlow Flow:
 - Amazon S3 Bucket:
   - `RawBucket` bucket where raw data from AppFlow will land.
-  - `ResultsBucket` bucket where the athena query will store query results.
+  - `ResultsBucket` bucket where the Athena query will store query results.
   - `CuratedBucket` bucket where transformed data will be stored.
 - IAM Policy:
   - `appflow_s3_solutionslibrary_policy` is based off this guide: [Amazon S3 Bucket Policies for Amazon AppFlow](https://docs.aws.amazon.com/appflow/latest/userguide/s3-policies-management.html)
@@ -89,7 +87,7 @@ If you want to perform transformations, such as aggregating, joining, change sch
 #### Transform or enhance the data with Glue Studio
 Follow this guide, [Creating ETL jobs with AWS Glue Studio](https://docs.aws.amazon.com/glue/latest/ug/creating-jobs-chapter.html), to create a job on AWS Glue.
 
-When you get to configuring *job details*, an AWS Glue Role named `glue_solutionslibrary_role` was created that allows glue read only access to the `Raw_Data` bucket, and grants read and write access to the `Curated_Data` bucket. Attach this role to your job to grant it access to all the necessary resources and perform the necessary actions.
+When you get to configuring *job details*, an AWS Glue Role named `glue_solutionslibrary_role` was created that allows Glue read only access to the `Raw_Data` bucket, and grants read and write access to the `Curated_Data` bucket. Attach this role to your job to grant it access to all the necessary resources and perform the necessary actions.
 
 <img src="imgs/aws_glue_studio.png" alt="image" width="800" height="auto">
 
@@ -123,7 +121,7 @@ To create a dataset in QuickSight, click `Datasets`, then `New dataset`.
 
 <img src="imgs/qs_dataset.png" alt="image" width="800" height="auto">
 
-Select `Athena` then provide a name for your data source, and in athena workgroup select `appflowsolution_wg`.
+Select `Athena` then provide a name for your data source, and in Athena workgroup select `appflowsolution_wg`.
 Click `Validate Connection` to verify that the data source is accessible by QuickSight, then click `Create data source`.
 
 <img src="imgs/qs_athena_workgroup.png" alt="image" width="800" height="auto">
@@ -139,9 +137,9 @@ review if you want to Import the dataset using SPICE or direct query, then click
 
 
 ## Cleanup
-Upon completing this guidance, you have the option to retain or delete the resources created. If you decide to delete the resources, here are the items to delete.
+Upon completing this guidance, you have the option to retain or delete the resources created. If you decide to delete the resources, here are the items to delete:
 - Delete the Cloud Formation Templates that were deployed. By default, the S3 buckets that were created will be retained, so you will need to delete these manually.
-- Check QuickSight for any Datasets that you no longer need, and determin if you still want to keep the QuickSight subscription.
+- Check QuickSight for any Datasets that you no longer need, and determine if you still want to keep the QuickSight subscription.
 - Check AWS Glue for any jobs that you manually created and see if you want to retain or delete them.
 
 ## Security
