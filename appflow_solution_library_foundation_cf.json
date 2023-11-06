@@ -587,16 +587,6 @@
    "Metadata": {
     "aws:cdk:path": "appflow-solution-foundation/glue_role/Resource"
    }
-  },
-  "CDKMetadata": {
-   "Type": "AWS::CDK::Metadata",
-   "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OPQ+CMBCGfwt7OUEmVzFxlODgaI5ySgVa0l5jCOG/y1eC0/N+XXJHOEUQBfh1oSzrsFEFDHdGWYv0pTO02BKTFVP/HFwCw9nLmnguN7UiM42S/R6vfhTvxhNM6QUZC3QkFLYw7OtN5aah2c4cBXJFGuezh7H11RrfjSInZ7yVy+zmufPLE/9panSpWBk9iqznyuhDAnEMSfBxSoXWa1YtQb7yBx/6TFj4AAAA"
-   },
-   "Metadata": {
-    "aws:cdk:path": "appflow-solution-foundation/CDKMetadata/Default"
-   },
-   "Condition": "CDKMetadataAvailable"
   }
  },
  "Outputs": {
