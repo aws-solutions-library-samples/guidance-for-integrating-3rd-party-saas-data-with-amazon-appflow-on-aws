@@ -1,3 +1,5 @@
+import uuid
+
 import aws_cdk
 from aws_cdk import (
     Stack,
@@ -9,55 +11,49 @@ from aws_cdk import (
     aws_athena as athena
 )
 from constructs import Construct
-import uuid
-
 
 
 class AppflowSolutionStackFoundation(Stack):
-    def __init__ (self, scope: Construct, construct_id: str, **kwargs) -> None:
+    def __init__ (self, scope: Construct, construct_id: str,
+                  RawBucketName,
+                  CuratedBucketName,
+                  ResultsBucketName,
+                  GlueDatabaseName,
+                  AthenaWGName,
+                  **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
         # parameters for Data Lake
-        unique_id=uuid.uuid4().hex
-        rawBucketName = CfnParameter(self, "RawBucketName",
-                                     default="appflow-solution-raw-{}".format(unique_id),
-                                     description="Name of the Raw S3 Bucket where AppFlow will load data into"
-                                                 " (Bucket names can consist only of lowercase letters, numbers"
-                                                 ", dots, and hyphens)",
-                                     allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
-        curatedBucketName = CfnParameter(self, "CuratedBucketName",
-                                         default="appflow-solution-curated-{}".format(unique_id),
-                                         type="String",
-                                         description="Name of the Curated S3 Bucket where transformed data will be "
-                                                     "loaded into (Bucket names can consist only of lowercase "
-                                                     "letters, numbers, dots, and hyphens)",
-                                         allowed_pattern="(?!(^xn--|.+-s3alias$))^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$")
-        resultsBucketName = CfnParameter(self, "ResultsBucketName",
-                                         default="appflow-solution-results-{}".format(unique_id),
-                                         type="String",
-                                         description="Name of the Results S3 Bucket where Athena will store query "
-                                                     "results (Bucket names can consist only of lowercase letters, "
-                                                     "numbers, dots, and hyphens)")
-        glueDatabaseName = CfnParameter(self, "GlueDatabaseName",
-                                        default='appflowsolution_db',
-                                        type="String",
-                                        description="Name of the Glue Database")
-        athena_wg_name = CfnParameter(self, "AthenaWGName",
-                                      default='appflowsolution_wg',
-                                      type="String",
-                                      description="Name of the Athena Workgroup")
+        self.RawBucketName = RawBucketName
+        self.CuratedBucketName = CuratedBucketName
+        self.ResultsBucketName = ResultsBucketName
+        self.GlueDatabaseName = GlueDatabaseName
+        self.AthenaWGName = AthenaWGName
+
+        # appflow_solutionslibrary_role
+        appflow_solutionslibrary_role_name = CfnParameter(self, "AppflowSolutionslibraryRole",
+                                                          default='appflow_solutionslibrary_role',
+                                                          type="String",
+                                                          description="Name of the role for AppFlow to access Glue Data Catalog")
+        # glue_solutionslibrary_role
+        glue_solutionslibrary_role_name = CfnParameter(self, "GlueSolutionslibraryRole",
+                                                       default='glue_solutionslibrary_role',
+                                                       type="String",
+                                                       description="Name of the role for Glue to access Glue Data Catalog")
+
         # s3 buckets
 
         raw_bucket = s3.Bucket(self, "RawBucket",
-                               bucket_name=rawBucketName.value_as_string,
+                               bucket_name=self.RawBucketName,
                                enforce_ssl=True,
                                encryption=s3.BucketEncryption.S3_MANAGED,
                                block_public_access=s3.BlockPublicAccess.BLOCK_ALL)
         curated_bucket = s3.Bucket(self, "CuratedBucket",
-                                   bucket_name=curatedBucketName.value_as_string,
+                                   bucket_name=self.CuratedBucketName,
                                    enforce_ssl=True, encryption=s3.BucketEncryption.S3_MANAGED,
                                    block_public_access=s3.BlockPublicAccess.BLOCK_ALL)
         results_bucket = s3.Bucket(self, "ResultsBucket",
-                                   bucket_name=resultsBucketName.value_as_string,
+                                   bucket_name=self.ResultsBucketName,
                                    enforce_ssl=True,
                                    encryption=s3.BucketEncryption.S3_MANAGED,
                                    block_public_access=s3.BlockPublicAccess.BLOCK_ALL)
@@ -66,10 +62,9 @@ class AppflowSolutionStackFoundation(Stack):
         glue_db = glue.CfnDatabase(self, "GlueAppFlowDB",
                                    catalog_id=aws_cdk.Aws.ACCOUNT_ID,
                                    database_input=glue.CfnDatabase.DatabaseInputProperty(
-                                       name=glueDatabaseName.value_as_string))
+                                       name=self.GlueDatabaseName))
         # IAM
         appflow_s3_policy = iam.Policy(self, "appflow_s3_policy",
-                                       policy_name='appflow_s3_solutionslibrary_policy',
                                        statements=[
                                            iam.PolicyStatement(effect=iam.Effect.ALLOW,
                                                                actions=[
@@ -127,12 +122,12 @@ class AppflowSolutionStackFoundation(Stack):
                                          )
         appflow_role = iam.Role(self, "appflow_solutionslibrary_role",
                                 assumed_by=iam.ServicePrincipal("appflow.amazonaws.com"),
-                                role_name="appflow_solutionslibrary_role"
+                                role_name=appflow_solutionslibrary_role_name.value_as_string
                                 )
         appflow_role.attach_inline_policy(appflow_s3_policy)
         appflow_role.attach_inline_policy(appflow_glue_policy)
         athena_wg = athena.CfnWorkGroup(self, "appflow_workgroup",
-                                        name=athena_wg_name.value_as_string,
+                                        name=self.AthenaWGName,
                                         description='Workgroup for Athena queries',
                                         work_group_configuration=athena.CfnWorkGroup.WorkGroupConfigurationProperty(
                                             result_configuration=athena.CfnWorkGroup.ResultConfigurationProperty(
@@ -166,9 +161,9 @@ class AppflowSolutionStackFoundation(Stack):
                                                        )
                                    )
 
-        glue_role = iam.Role(self, "glue_role",
+        glue_role = iam.Role(self, "glue_solutionslibrary_role",
                              assumed_by=iam.ServicePrincipal("glue.amazonaws.com"),
-                             role_name='glue_solutionslibrary_role',
+                             role_name=glue_solutionslibrary_role_name.value_as_string,
                              description="Role uses the Glue Service role for baseline glue permissions. Add inline policy developed to "
                                          "provide Read only access to Raw Bucket, and read and write permissions into the curated bucket."
                              )

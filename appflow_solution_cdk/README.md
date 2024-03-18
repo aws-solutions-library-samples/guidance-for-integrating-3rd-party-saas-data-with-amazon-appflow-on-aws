@@ -25,18 +25,7 @@ Here is a sample command to deploy this stack with all the default parameters:
 ```Shell
 cdk deploy appflow-solution-foundation
 ```
-If you want to customize the parameters, here is the sample command to deploy this stack. Please replace the placeholder values with the names you want to provide:
-- `RawBucketName`,`CuratedBucketName`, and `ResultsBucketName` names must be globally unique and can consist only of lowercase letters, numbers, dots (.), and hyphens (-). Refer to [Bucket Naming Rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console) for more information.
-- `GlueDatabaseName` names can consist of lowercase letters, numbers, and the underscore character. Refer to [Database, table, and column names](https://docs.aws.amazon.com/athena/latest/ug/glue-best-practices.html#schema-names) for more information.
-- `AthenaWGName` must be a unique name for your workgroup. Use 1 - 128 characters. (A-Z,a-z,0-9,_,-,.). This name cannot be changed. Refer to [Managing workgroups](https://docs.aws.amazon.com/athena/latest/ug/workgroups-create-update-delete.html#creating-workgroups) for more information.
-```Shell
-cdk deploy appflow-solution-foundation \
---parameters RawBucketName= [ReplaceWithRawBucketName] \
---parameters CuratedBucketName= [ReplaceWithCuratedBucketName]\
---parameters ResultsBucketName=[ReplaceWithResultsBucketName] \
---parameters GlueDatabaseName=[ReplaceWithGlueDatabaseName] \
---parameters AthenaWGName=[ReplaceWithAthenaWGName]
-```
+***If you want to customize the parameters, you can change the default parameters in the [app.py](app.py) file in the `AppflowSolutionStackFoundation` class inputs.***
 
 Outputs will be displayed in [CloudFormation](https://console.aws.amazon.com/cloudformation/home). This stack will be named `appflow-solution-foundation`. Click on outputs, and this will provide you the names that were generated for the AppFlow Role.
 
